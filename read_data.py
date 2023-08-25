@@ -92,7 +92,7 @@ def read_dicom(parser):
               unpack_tag(data_headers[0], 0x70311002)) /
              ((np.max(angles) - np.min(angles)) / (2 * np.pi)))  # Mayo does not include the tag TableFeedPerRotation, we manually compute the pitch
     z_positions = np.array([unpack_tag(d, 0x70311002) for d in data_headers])  # DetectorFocalCenterAxialPosition
-    nz_rebinned = int((z_positions[-1] - z_positions[0]) / dv_rebinned)
+    nz_rebinned = int(abs(z_positions[-1] - z_positions[0]) / dv_rebinned)
     hu_factor = float(data_headers[0][0x70411001].value)  # WaterAttenuationCoefficient (see manual for HU conversion)
     rotview = int(len(angles) / ((angles[-1] - angles[0]) / (2 * np.pi)))
 

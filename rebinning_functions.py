@@ -164,16 +164,16 @@ def rebin_helical_to_fan_beam_trajectory(args, proj_helic):
         z_poses_valid = args.z_positions[s_angle::args.rotview]
 
         # Axial positions of resampled projections, starting at z_positions[0].
-        z_poses_resampled = (np.arange(0, args.nz_rebinned, 1) * args.dv_rebinned) + args.z_positions[0]
+        z_poses_resampled = (np.arange(0, args.nz_rebinned, 1) * args.dv_rebinned)*np.sign(args.pitch) + args.z_positions[0]
 
         for i_proj in range(len(z_poses_valid)):
             # Calculate indices of lower and upper z limit for each valid cone beam source position.
             lower_lim = z_poses_valid[i_proj] - distance
             upper_lim = z_poses_valid[i_proj] + distance
 
-            i_lower_lim = np.clip(int((lower_lim - args.z_positions[0]) / args.dv_rebinned),
+            i_lower_lim = np.clip(int(abs(lower_lim - args.z_positions[0]) / args.dv_rebinned),
                                   a_min=0, a_max=len(z_poses_resampled))
-            i_upper_lim = np.clip(int(np.ceil((upper_lim - args.z_positions[0]) / args.dv_rebinned)),
+            i_upper_lim = np.clip(int(np.ceil(abs(upper_lim - args.z_positions[0]) / args.dv_rebinned)),
                                   a_min=0, a_max=len(z_poses_resampled))
 
             # Loop over z slices.
